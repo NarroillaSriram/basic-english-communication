@@ -65,14 +65,13 @@ function speak(text, lang = 'en-US') {
 }
 
 function pronounceLetter(item) {
-    let baseLetter = item.eng; // e.g., 'kaa'
-    let spelledOut = baseLetter.split('').join(', '); // e.g., 'k, a, a'
+    let spelledOut = item.eng.split('').join(', '); // e.g., 'k, a, a'
     
-    let textToSpeak = `${spelledOut}, , , ${baseLetter}`;
+    let textToSpeak = `${spelledOut}, , , ${item.tel}`;
     if (voiceTeacherEnabled) {
-        textToSpeak = `${spelledOut}. ${baseLetter}. Repeat after me, ${baseLetter}`;
+        textToSpeak = `${spelledOut}. ${item.tel}. Repeat after me, ${item.tel}`;
     }
-    speak(textToSpeak);
+    speak(textToSpeak, 'te-IN');
 }
 
 function markAsLearned(letter) {
