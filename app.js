@@ -67,11 +67,11 @@ function speak(text, lang = 'en-US') {
 function pronounceLetter(item) {
     let spelledOut = item.eng.split('').join(', '); // e.g., 'k, a, a'
     
-    let textToSpeak = `${spelledOut}, , , ${item.tel}`;
+    let textToSpeak = `${spelledOut}, , , ${item.eng}`;
     if (voiceTeacherEnabled) {
-        textToSpeak = `${spelledOut}. ${item.tel}. Repeat after me, ${item.tel}`;
+        textToSpeak = `${spelledOut}. ${item.eng}. Repeat after me, ${item.eng}`;
     }
-    speak(textToSpeak, 'te-IN');
+    speak(textToSpeak, 'en-IN');
 }
 
 function markAsLearned(letter) {
@@ -159,7 +159,7 @@ function renderVocabulary() {
         `;
         
         card.addEventListener('click', () => {
-            speak(w.tel, 'te-IN');
+            speak(w.eng, 'en-IN');
             handleCardSelection(card);
             card.style.transform = 'scale(0.9)';
             setTimeout(() => card.style.transform = '', 150);
@@ -225,7 +225,7 @@ function loadQuizQuestion() {
 }
 
 function playQuizSound() {
-    speak(currentQuizCorrectItem.tel, 'te-IN');
+    speak(currentQuizCorrectItem.eng, 'en-IN');
 }
 
 function handleQuizAnswer(selectedOption, btnElement) {
@@ -306,7 +306,7 @@ function handleSyllableClick(syllableObj, btnElement) {
     
     if (syllableObj.eng === expectedEng) {
         // Correct
-        speak(syllableObj.tel, 'te-IN');
+        speak(syllableObj.eng, 'en-IN');
         btnElement.classList.add('used');
         
         // Move to answer box
@@ -324,7 +324,7 @@ function handleSyllableClick(syllableObj, btnElement) {
             jumbledFeedback.innerText = 'Excellent!';
             jumbledFeedback.className = 'quiz-feedback correct-text';
             
-            setTimeout(() => speak(currentJumbledWord.tel, 'te-IN'), 500);
+            setTimeout(() => speak(currentJumbledWord.eng, 'en-IN'), 500);
             nextWordBtn.classList.remove('hidden');
         }
     } else {
