@@ -182,7 +182,7 @@ function renderVocabulary() {
 // Quiz Functions
 function startQuiz() {
     alphabetSection.classList.add('hidden');
-    document.querySelector('.hero').classList.add('hidden');
+    document.querySelector('#telugu-hero').classList.add('hidden');
     quizSection.classList.remove('hidden');
     loadQuizQuestion();
 }
@@ -190,6 +190,7 @@ function startQuiz() {
 function endQuiz() {
     quizSection.classList.add('hidden');
     alphabetSection.classList.remove('hidden');
+    document.querySelector('#telugu-hero').classList.remove('hidden');
     if(synth.speaking) synth.cancel();
 }
 
@@ -266,8 +267,8 @@ let currentSyllableIndex = 0;
 
 function startJumbledGame() {
     alphabetSection.classList.add('hidden');
-    document.querySelector('.hero').classList.add('hidden');
-    jumbledSection.classList.remove('hidden');
+    document.querySelector('#telugu-hero').classList.add('hidden');
+    document.getElementById('jumbled-section').classList.remove('hidden');
     
     // Shuffle words Data for variety
     wordsData.sort(() => Math.random() - 0.5);
@@ -343,8 +344,9 @@ function handleSyllableClick(syllableObj, btnElement) {
 }
 
 function endJumbledGame() {
-    jumbledSection.classList.add('hidden');
+    document.getElementById('jumbled-section').classList.add('hidden');
     alphabetSection.classList.remove('hidden');
+    document.querySelector('#telugu-hero').classList.remove('hidden');
     if(synth.speaking) synth.cancel();
 }
 
