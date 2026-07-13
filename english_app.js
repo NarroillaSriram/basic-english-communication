@@ -196,7 +196,7 @@ async function processSpeech(text) {
     
     let prompt = "";
     if (currentModule === 1) {
-        prompt = \`You are an English speaking trainer. The expected paragraph is: "\${currentParagraph}". The user spoke: "\${text.trim()}". Analyze the user's speaking in a beginner-friendly way. Output EXACTLY in this format:
+        prompt = `You are an English speaking trainer. The expected paragraph is: "${currentParagraph}". The user spoke: "${text.trim()}". Analyze the user's speaking in a beginner-friendly way. Output EXACTLY in this format:
 
 1. Mistakes:
 - [issues]
@@ -207,13 +207,13 @@ async function processSpeech(text) {
 4. Tips to Improve:
 - [tips]
 
-Keep language simple.\`;
+Keep language simple.`;
     } else if (currentModule === 2) {
-        prompt = \`You are a friendly English communication trainer. The user says: "\${text.trim()}". Talk with the user in simple English. Keep sentences short. Ask a question to continue the conversation. If they made mistakes, first show correct sentence then explain simply. Be supportive.\`;
+        prompt = `You are a friendly English communication trainer. The user says: "${text.trim()}". Talk with the user in simple English. Keep sentences short. Ask a question to continue the conversation. If they made mistakes, first show correct sentence then explain simply. Be supportive.`;
     } else if (currentModule === 3) {
-        prompt = \`You are an English speaking coach. The user just spoke on their topic: "\${text.trim()}". Analyze their speaking, give short simple feedback, and then give them a NEW simple daily life topic to speak about for 30-60 seconds, along with 2-3 guiding questions.\`;
+        prompt = `You are an English speaking coach. The user just spoke on their topic: "${text.trim()}". Analyze their speaking, give short simple feedback, and then give them a NEW simple daily life topic to speak about for 30-60 seconds, along with 2-3 guiding questions.`;
     } else if (currentModule === 4) {
-        prompt = \`You are an English communication expert. The user said: "\${text.trim()}". Output EXACTLY in this format:
+        prompt = `You are an English communication expert. The user said: "${text.trim()}". Output EXACTLY in this format:
 
 1. Grammar Feedback:
 - [correction]
@@ -222,7 +222,7 @@ Keep language simple.\`;
 3. Vocabulary Suggestion:
 - [1-2 words]
 4. Communication Tips:
-- [2 tips]\`;
+- [2 tips]`;
     }
     
     try {
@@ -237,7 +237,7 @@ Keep language simple.\`;
 async function generateTopic() {
     if(!getApiKey()) return;
     speechStatus.innerText = "Generating topic...";
-    const prompt = \`You are an English speaking coach. Give the user ONE simple daily life speaking topic to speak about for 30-60 seconds. Also give 2-3 simple guiding questions. Format nicely.\`;
+    const prompt = `You are an English speaking coach. Give the user ONE simple daily life speaking topic to speak about for 30-60 seconds. Also give 2-3 simple guiding questions. Format nicely.`;
     try {
         const topic = await callGeminiAPI(prompt);
         addMessageToChat("AI", topic);
@@ -256,11 +256,11 @@ function addMessageToChat(sender, text) {
     let formattedText = text.replace(/\\n/g, '<br>').replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
     
     if (sender === "You") {
-        msgDiv.innerHTML = \`<strong style="color: var(--primary);">\${sender}:</strong> <div style="background: rgba(255,107,107,0.1); padding: 10px; border-radius: 8px; margin-top: 5px;">\${formattedText}</div>\`;
+        msgDiv.innerHTML = `<strong style="color: var(--primary);">${sender}:</strong> <div style="background: rgba(255,107,107,0.1); padding: 10px; border-radius: 8px; margin-top: 5px;">${formattedText}</div>`;
     } else if (sender === "AI") {
-        msgDiv.innerHTML = \`<strong style="color: var(--tertiary-dark);">\${sender}:</strong> <div style="background: rgba(29,209,161,0.1); padding: 10px; border-radius: 8px; margin-top: 5px;">\${formattedText}</div>\`;
+        msgDiv.innerHTML = `<strong style="color: var(--tertiary-dark);">${sender}:</strong> <div style="background: rgba(29,209,161,0.1); padding: 10px; border-radius: 8px; margin-top: 5px;">${formattedText}</div>`;
     } else {
-        msgDiv.innerHTML = \`<strong style="color: red;">\${sender}:</strong> <div style="color: red;">\${formattedText}</div>\`;
+        msgDiv.innerHTML = `<strong style="color: red;">${sender}:</strong> <div style="color: red;">${formattedText}</div>`;
     }
     
     chatHistory.appendChild(msgDiv);
@@ -272,7 +272,7 @@ async function callGeminiAPI(promptText) {
     const apiKey = getApiKey();
     if(!apiKey) throw new Error("API Key is missing");
     
-    const url = \`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${apiKey}\`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     
     // Add to chat history context for conversation mode
     if(currentModule === 2) {
