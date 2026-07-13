@@ -60,6 +60,8 @@ function speak(text, lang = 'en-US') {
     const utterance = new SpeechSynthesisUtterance(text);
     // Slightly slower rate for clarity
     utterance.rate = 0.9;
+    // Maximize volume
+    utterance.volume = 1.0;
     utterance.lang = lang;
     synth.speak(utterance);
 }
