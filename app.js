@@ -55,11 +55,12 @@ function updateProgress() {
     progressFill.style.width = `${(learned / total) * 100}%`;
 }
 
-function speak(text) {
+function speak(text, lang = 'en-US') {
     if (synth.speaking) synth.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     // Slightly slower rate for clarity
     utterance.rate = 0.9;
+    utterance.lang = lang;
     synth.speak(utterance);
 }
 
@@ -159,7 +160,7 @@ function renderVocabulary() {
         `;
         
         card.addEventListener('click', () => {
-            speak(w.eng);
+            speak(w.tel, 'te-IN');
             handleCardSelection(card);
             card.style.transform = 'scale(0.9)';
             setTimeout(() => card.style.transform = '', 150);
@@ -225,8 +226,7 @@ function loadQuizQuestion() {
 }
 
 function playQuizSound() {
-    const textToSpeak = currentQuizCorrectItem.eng;
-    speak(textToSpeak);
+    speak(currentQuizCorrectItem.tel, 'te-IN');
 }
 
 function handleQuizAnswer(selectedOption, btnElement) {
@@ -307,7 +307,7 @@ function handleSyllableClick(syllableObj, btnElement) {
     
     if (syllableObj.eng === expectedEng) {
         // Correct
-        speak(syllableObj.eng);
+        speak(syllableObj.tel, 'te-IN');
         btnElement.classList.add('used');
         
         // Move to answer box
@@ -325,7 +325,7 @@ function handleSyllableClick(syllableObj, btnElement) {
             jumbledFeedback.innerText = 'Excellent!';
             jumbledFeedback.className = 'quiz-feedback correct-text';
             
-            setTimeout(() => speak(currentJumbledWord.eng), 500);
+            setTimeout(() => speak(currentJumbledWord.tel, 'te-IN'), 500);
             nextWordBtn.classList.remove('hidden');
         }
     } else {
