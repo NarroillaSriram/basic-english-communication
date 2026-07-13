@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Telugu Through English</title>
+    <meta name="description" content="A fun and interactive way to learn Telugu letters using English transliteration.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="glass-nav">
+        <div class="logo">
+            <i class="fa-solid fa-language"></i> Telugu<span>Fun</span>
+        </div>
+        <div class="progress-container">
+            <span>Letters Learned: <span id="progress-count">0</span>/33</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1 class="bounce-in">Learn Telugu Through English</h1>
+            <p>Master the Telugu alphabet easily with our interactive voice teacher and fun quizzes!</p>
+            <div class="hero-buttons">
+                <button id="start-learning-btn" class="btn primary-btn pulse">Start Learning</button>
+                <button id="toggle-voice-btn" class="btn secondary-btn">
+                    <i class="fa-solid fa-microphone-slash"></i> Enable Voice Teacher
+                </button>
+            </div>
+        </section>
+
+        <section id="alphabet-section" class="alphabet-section hidden">
+            <div class="section-header" style="flex-wrap: wrap; gap: 10px; justify-content: center;">
+                <button id="back-home-btn" class="btn secondary-btn" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-arrow-left"></i> Home</button>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+                    <button id="view-structured-btn" class="btn tertiary-btn" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-list"></i> Alphabet</button>
+                    <button id="view-vocabulary-btn" class="btn tertiary-btn" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-book"></i> Vocabulary</button>
+                    <button id="start-jumbled-btn" class="btn primary-btn" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #a29bfe, #6c5ce7); border:none;"><i class="fa-solid fa-puzzle-piece"></i> Word Game</button>
+                </div>
+                <button id="start-quiz-btn" class="btn primary-btn" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-gamepad"></i> Quiz</button>
+            </div>
+            <div id="alphabet-grid" class="alphabet-grid">
+                <!-- Cards will be injected here by JS -->
+            </div>
+        </section>
+
+        <section id="quiz-section" class="quiz-section hidden">
+            <div class="quiz-container glass-panel">
+                <h2>Quiz Time!</h2>
+                <p id="quiz-question">Which letter is this sound?</p>
+                <button id="play-quiz-sound-btn" class="btn quiz-sound-btn pulse"><i class="fa-solid fa-volume-high"></i> Play Sound</button>
+                <div id="quiz-options" class="quiz-options">
+                    <!-- Options injected here by JS -->
+                </div>
+                <div id="quiz-feedback" class="quiz-feedback"></div>
+                <button id="next-quiz-btn" class="btn primary-btn hidden">Next Question</button>
+                <button id="end-quiz-btn" class="btn secondary-btn">End Quiz</button>
+            </div>
+        </section>
+
+        <section id="jumbled-section" class="quiz-section hidden">
+            <div class="quiz-container glass-panel">
+                <h2>Word Builder</h2>
+                <p id="jumbled-meaning" style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary);">Meaning: Slate</p>
+                
+                <div id="jumbled-answer-box" class="answer-box">
+                    <!-- Drop zone for clicked syllables -->
+                </div>
+                
+                <div id="jumbled-options" class="jumbled-options">
+                    <!-- Shuffled syllables will be here -->
+                </div>
+                
+                <div id="jumbled-feedback" class="quiz-feedback"></div>
+                <button id="next-word-btn" class="btn primary-btn hidden" style="margin: 0 auto 10px auto;">Next Word</button>
+                <button id="end-jumbled-btn" class="btn secondary-btn">End Game</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Made with <i class="fa-solid fa-heart" style="color: #ff4757;"></i> for learning Telugu</p>
+    </footer>
+
+    <script src="wordsData.js"></script>
+    <script src="guninthaluData.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
