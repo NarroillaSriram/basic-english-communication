@@ -48,15 +48,12 @@ document.getElementById('save-settings-btn').addEventListener('click', () => {
 });
 
 function getApiKey() {
-    return localStorage.getItem('gemini_api_key');
+    return 'not-needed';
 }
 
 function checkApiKey() {
-    if (!getApiKey()) {
-        apiWarning.classList.remove('hidden');
-    } else {
-        apiWarning.classList.add('hidden');
-    }
+    // API key is not needed for the free open-source API
+    apiWarning.classList.add('hidden');
 }
 
 // Module State
@@ -163,10 +160,6 @@ if (SpeechRecognition) {
 }
 
 recordBtn.addEventListener('click', () => {
-    if(!getApiKey()) {
-        alert("Please set your Gemini API key in settings first!");
-        return;
-    }
     if (recognition) {
         recognition.start();
     }
@@ -226,7 +219,7 @@ Keep language simple.`;
     }
     
     try {
-        const aiResponse = await callGeminiAPI(prompt);
+        const aiResponse = await callOpenSourceAPI(prompt);
         addMessageToChat("AI", aiResponse);
     } catch(err) {
         addMessageToChat("System", "Error: " + err.message);
@@ -239,7 +232,7 @@ async function generateTopic() {
     speechStatus.innerText = "Generating topic...";
     const prompt = `You are an English speaking coach. Give the user ONE simple daily life speaking topic to speak about for 30-60 seconds. Also give 2-3 simple guiding questions. Format nicely.`;
     try {
-        const topic = await callGeminiAPI(prompt);
+        const topic = await callOpenSourceAPI(prompt);
         addMessageToChat("AI", topic);
     } catch(err) {
         addMessageToChat("System", "Error: " + err.message);
@@ -267,37 +260,36 @@ function addMessageToChat(sender, text) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
-// Gemini API Call
-async function callGeminiAPI(promptText) {
-    const apiKey = getApiKey();
-    if(!apiKey) throw new Error("API Key is missing");
-    
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+// Free Open Source API Call (Pollinations.ai)
+async function callOpenSourceAPI(promptText) {
+    const url = `https://text.pollinations.ai/openai`;
     
     // Add to chat history context for conversation mode
     if(currentModule === 2) {
-        chatMessages.push({ role: "user", parts: [{ text: promptText }]});
+        chatMessages.push({ role: "user", content: promptText });
     } else {
         // For other modules, just single shot
-        chatMessages = [{ role: "user", parts: [{ text: promptText }]}];
+        chatMessages = [{ role: "user", content: promptText }];
     }
     
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: chatMessages })
+        body: JSON.stringify({ 
+            messages: chatMessages,
+            model: "openai"
+        })
     });
     
     if(!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || "Failed to fetch from Gemini");
+        throw new Error("Failed to fetch from the open-source API");
     }
     
     const data = await response.json();
-    const reply = data.candidates[0].content.parts[0].text;
+    const reply = data.choices[0].message.content;
     
     if(currentModule === 2) {
-        chatMessages.push({ role: "model", parts: [{ text: reply }]});
+        chatMessages.push({ role: "assistant", content: reply });
     }
     
     return reply;
