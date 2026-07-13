@@ -127,8 +127,11 @@ function renderStructured() {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'row-group';
         
-        group.combinations.forEach(item => {
-            rowDiv.appendChild(createCard(item));
+        group.combinations.forEach((item, index) => {
+            const card = createCard(item);
+            // Cap the delay for very long lists to avoid huge wait times
+            card.style.animationDelay = `${Math.min(index * 0.05, 1.5)}s`;
+            rowDiv.appendChild(card);
         });
         
         alphabetGrid.appendChild(rowDiv);
@@ -149,9 +152,10 @@ function renderVocabulary() {
     const rowDiv = document.createElement('div');
     rowDiv.className = 'row-group';
     
-    wordsData.forEach(w => {
+    wordsData.forEach((w, index) => {
         const card = document.createElement('div');
         card.className = `card`;
+        card.style.animationDelay = `${Math.min(index * 0.05, 2)}s`;
         
         card.innerHTML = `
             <i class="fa-solid fa-volume-up sound-icon"></i>
