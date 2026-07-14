@@ -23,20 +23,13 @@
 }
 
 body {
-    background-color: var(--bg-color);
-    background: linear-gradient(-45deg, #ffdde1, #ee9ca7, #a1c4fd, #c2e9fb);
-    background-size: 400% 400%;
-    animation: gradientMove 15s ease infinite;
+    background-color: #f0f4f8;
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    background-attachment: fixed;
     color: var(--text-dark);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-}
-
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 /* Glassmorphism utility */
