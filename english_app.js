@@ -118,7 +118,6 @@ if (SpeechRecognition) {
         recordBtn.classList.add('hidden');
         stopRecordBtn.classList.remove('hidden');
         speechStatus.innerText = "Listening...";
-        recognition.finalText = "";
     };
 
     recognition.onresult = function(event) {
@@ -146,13 +145,12 @@ if (SpeechRecognition) {
 
     recognition.onend = function() {
         if(isRecording) {
-            // Restart if stopped unexpectedly, or process if manually stopped
-            isRecording = false;
-            recordBtn.classList.remove('hidden');
-            stopRecordBtn.classList.add('hidden');
-            speechStatus.innerText = "";
-            processSpeech(recognition.finalText);
-            recognition.finalText = "";
+            // Restart if stopped unexpectedly (e.g. due to pause in speech)
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error("Could not restart recognition automatically", e);
+            }
         }
     };
 } else {
@@ -161,6 +159,7 @@ if (SpeechRecognition) {
 
 recordBtn.addEventListener('click', () => {
     if (recognition) {
+        recognition.finalText = ""; // Clear text on new manual start
         recognition.start();
     }
 });
