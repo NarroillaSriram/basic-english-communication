@@ -35,6 +35,13 @@ const speechStatus = document.getElementById('speech-status');
 const moduleTitle = document.getElementById('module-title');
 const moduleInstructions = document.getElementById('module-instructions');
 
+const englishSpeakingArea = document.getElementById('english-speaking-area');
+const englishQuizArea = document.getElementById('english-quiz-area');
+const englishQuizQuestion = document.getElementById('english-quiz-question');
+const englishQuizOptions = document.getElementById('english-quiz-options');
+const englishQuizFeedback = document.getElementById('english-quiz-feedback');
+const englishQuizNextBtn = document.getElementById('english-quiz-next-btn');
+
 // Settings
 document.getElementById('settings-btn').addEventListener('click', () => {
     settingsModal.classList.remove('hidden');
@@ -48,12 +55,16 @@ document.getElementById('save-settings-btn').addEventListener('click', () => {
 });
 
 function getApiKey() {
-    return 'not-needed';
+    return localStorage.getItem('gemini_api_key') || '';
 }
 
 function checkApiKey() {
-    // API key is not needed for the free open-source API
-    apiWarning.classList.add('hidden');
+    if (!getApiKey()) {
+        apiWarning.innerText = "Tip: Set your Google Gemini API Key in settings for a much faster Conversation Bot!";
+        apiWarning.classList.remove('hidden');
+    } else {
+        apiWarning.classList.add('hidden');
+    }
 }
 
 // Module State
@@ -79,23 +90,31 @@ function openEnglishModule(moduleId) {
     paragraphContainer.classList.add('hidden');
     checkApiKey();
     
-    if(moduleId === 1) {
-        moduleTitle.innerText = "Speaking Practice & Analysis";
-        moduleInstructions.innerText = "Read the paragraph aloud. The AI will analyze your pronunciation and missing words.";
-        currentParagraph = sampleParagraphs[Math.floor(Math.random() * sampleParagraphs.length)];
-        paragraphContainer.innerText = currentParagraph;
-        paragraphContainer.classList.remove('hidden');
-    } else if(moduleId === 2) {
-        moduleTitle.innerText = "Conversation Bot";
-        moduleInstructions.innerText = "Chat with a friendly AI trainer. Say 'Hello' to begin!";
-        addMessageToChat("AI", "Hello! I am your friendly English trainer. How are you doing today?");
-    } else if(moduleId === 3) {
-        moduleTitle.innerText = "Topic-Based Speaking";
-        moduleInstructions.innerText = "Speak for 30-60 seconds on the topic given by the AI.";
-        generateTopic();
-    } else if(moduleId === 4) {
-        moduleTitle.innerText = "Skills Improvement";
-        moduleInstructions.innerText = "Speak freely about anything. The AI will give you grammar tips and vocabulary suggestions.";
+    if (moduleId === 4) {
+        englishSpeakingArea.classList.add('hidden');
+        englishQuizArea.classList.remove('hidden');
+        moduleTitle.innerText = "Skills Improvement Quiz";
+        moduleInstructions.innerText = "Answer these grammar and vocabulary questions to test your skills!";
+        startEnglishQuiz();
+    } else {
+        englishSpeakingArea.classList.remove('hidden');
+        englishQuizArea.classList.add('hidden');
+        
+        if(moduleId === 1) {
+            moduleTitle.innerText = "Speaking Practice & Analysis";
+            moduleInstructions.innerText = "Read the paragraph aloud. The AI will analyze your pronunciation and missing words.";
+            currentParagraph = sampleParagraphs[Math.floor(Math.random() * sampleParagraphs.length)];
+            paragraphContainer.innerText = currentParagraph;
+            paragraphContainer.classList.remove('hidden');
+        } else if(moduleId === 2) {
+            moduleTitle.innerText = "Conversation Bot";
+            moduleInstructions.innerText = "Chat with a friendly AI trainer. Say 'Hello' to begin!";
+            addMessageToChat("AI", "Hello! I am your friendly English trainer. How are you doing today?");
+        } else if(moduleId === 3) {
+            moduleTitle.innerText = "Topic-Based Speaking";
+            moduleInstructions.innerText = "Speak for 30-60 seconds on the topic given by the AI.";
+            generateTopic();
+        }
     }
 }
 
@@ -259,8 +278,13 @@ function addMessageToChat(sender, text) {
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
-// Free Open Source API Call (Pollinations.ai)
+// API Call Router
 async function callOpenSourceAPI(promptText) {
+    const apiKey = getApiKey();
+    if (apiKey) {
+        return await callGeminiAPI(promptText, apiKey);
+    }
+
     const url = `https://text.pollinations.ai/openai`;
     
     // Add to chat history context for conversation mode
@@ -293,3 +317,98 @@ async function callOpenSourceAPI(promptText) {
     
     return reply;
 }
+
+// Google Gemini API Call
+async function callGeminiAPI(promptText, apiKey) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    
+    let contents = [];
+    if (currentModule === 2) {
+        chatMessages.push({ role: "user", content: promptText });
+        contents = chatMessages.map(msg => ({
+            role: msg.role === "assistant" ? "model" : "user",
+            parts: [{ text: msg.content }]
+        }));
+    } else {
+        contents = [{ role: "user", parts: [{ text: promptText }] }];
+    }
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: contents })
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch from Gemini API. Check your API key.");
+    }
+
+    const data = await response.json();
+    const reply = data.candidates[0].content.parts[0].text;
+
+    if (currentModule === 2) {
+        chatMessages.push({ role: "assistant", content: reply });
+    }
+
+    return reply;
+}
+
+// Skills Improvement Quiz Logic
+let currentQuizIndex = 0;
+let quizScore = 0;
+
+function startEnglishQuiz() {
+    currentQuizIndex = 0;
+    quizScore = 0;
+    // Shuffle grammarData
+    grammarData.sort(() => Math.random() - 0.5);
+    loadEnglishQuizQuestion();
+}
+
+function loadEnglishQuizQuestion() {
+    englishQuizOptions.innerHTML = '';
+    englishQuizFeedback.innerHTML = '';
+    englishQuizNextBtn.classList.add('hidden');
+    
+    if (currentQuizIndex >= grammarData.length || currentQuizIndex >= 5) {
+        englishQuizQuestion.innerText = `Quiz Complete! Your score: ${quizScore} out of ${Math.min(5, grammarData.length)}`;
+        return;
+    }
+
+    const q = grammarData[currentQuizIndex];
+    englishQuizQuestion.innerText = `Q${currentQuizIndex + 1}: ${q.question}`;
+
+    q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option-btn';
+        btn.style.width = "100%"; // Take full width
+        btn.innerText = opt;
+        btn.onclick = () => checkEnglishQuizAnswer(opt, q, btn);
+        englishQuizOptions.appendChild(btn);
+    });
+}
+
+function checkEnglishQuizAnswer(selected, q, btnElement) {
+    const allBtns = englishQuizOptions.querySelectorAll('button');
+    allBtns.forEach(b => b.disabled = true);
+
+    if (selected === q.answer) {
+        btnElement.classList.add('correct');
+        englishQuizFeedback.innerHTML = `<span style="color: #2e7d32; font-weight: bold;">Correct!</span> ${q.explanation}`;
+        quizScore++;
+    } else {
+        btnElement.classList.add('wrong');
+        allBtns.forEach(b => {
+            if (b.innerText === q.answer) {
+                b.classList.add('correct');
+            }
+        });
+        englishQuizFeedback.innerHTML = `<span style="color: #c62828; font-weight: bold;">Incorrect.</span> ${q.explanation}`;
+    }
+    englishQuizNextBtn.classList.remove('hidden');
+}
+
+englishQuizNextBtn.addEventListener('click', () => {
+    currentQuizIndex++;
+    loadEnglishQuizQuestion();
+});

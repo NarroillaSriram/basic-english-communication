@@ -128,18 +128,30 @@
                     <div id="api-warning" class="hidden" style="color:var(--primary); font-weight:bold; margin-bottom:10px; background: rgba(255,107,107,0.1); padding: 10px; border-radius: 8px;">Please set your Gemini API Key in settings first!</div>
 
                     <!-- Chat / Speaking Area -->
-                    <div id="chat-history" class="answer-box" style="flex-direction:column; align-items:flex-start; min-height: 250px; max-height: 400px; overflow-y:auto; padding: 15px; background: rgba(255,255,255,0.8);">
-                    </div>
-                    
-                    <!-- Context specific inputs -->
-                    <div id="paragraph-container" class="hidden" style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: left; font-size: 1.1rem; color: #1e88e5;">
+                    <div id="english-speaking-area">
+                        <div id="chat-history" class="answer-box" style="flex-direction:column; align-items:flex-start; min-height: 250px; max-height: 400px; overflow-y:auto; padding: 15px; background: rgba(255,255,255,0.8);">
+                        </div>
+                        
+                        <!-- Context specific inputs -->
+                        <div id="paragraph-container" class="hidden" style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; text-align: left; font-size: 1.1rem; color: #1e88e5;">
+                        </div>
+
+                        <div style="display:flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                            <button id="record-btn" class="btn primary-btn pulse"><i class="fa-solid fa-microphone"></i> Start Speaking</button>
+                            <button id="stop-record-btn" class="btn secondary-btn hidden"><i class="fa-solid fa-stop"></i> Stop & Send</button>
+                        </div>
+                        <div id="speech-status" style="margin-top: 10px; color: var(--text-light); font-style: italic;"></div>
                     </div>
 
-                    <div style="display:flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                        <button id="record-btn" class="btn primary-btn pulse"><i class="fa-solid fa-microphone"></i> Start Speaking</button>
-                        <button id="stop-record-btn" class="btn secondary-btn hidden"><i class="fa-solid fa-stop"></i> Stop & Send</button>
+                    <!-- Skills Improvement Quiz Area -->
+                    <div id="english-quiz-area" class="hidden" style="margin-top: 20px;">
+                        <h3 id="english-quiz-question" style="font-size: 1.3rem; margin-bottom: 15px; color: var(--text-dark);">Question text here?</h3>
+                        <div id="english-quiz-options" class="quiz-options" style="flex-direction: column; gap: 10px;">
+                            <!-- Options injected here by JS -->
+                        </div>
+                        <div id="english-quiz-feedback" class="quiz-feedback" style="margin-top: 15px; min-height: 3rem;"></div>
+                        <button id="english-quiz-next-btn" class="btn primary-btn hidden" style="margin-top: 15px;">Next Question</button>
                     </div>
-                    <div id="speech-status" style="margin-top: 10px; color: var(--text-light); font-style: italic;"></div>
                 </div>
             </section>
         </main>
@@ -160,6 +172,7 @@
 
     <script src="wordsData.js"></script>
     <script src="guninthaluData.js"></script>
+    <script src="grammarData.js"></script>
     <script src="app.js"></script>
     <script src="english_app.js"></script>
 </body>
